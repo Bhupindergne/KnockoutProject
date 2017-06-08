@@ -4,6 +4,9 @@
     <title></title>
 	<meta charset="utf-8" />
     <script src="knockout-3.4.2.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
 </head>
 <body>
     FirstName: <input type="text" data-bind="value:FirstName"/><br />
@@ -16,6 +19,10 @@
             this.FirstName = ko.observable();
             this.LastName = ko.observable();
             this.FullName = ko.computed(function () {
+                if (jQuery.type(this.LastName) === "undefined")
+                {
+                    return "";
+                }
                 return this.FirstName() + " " + this.LastName();
             },this);
         }
