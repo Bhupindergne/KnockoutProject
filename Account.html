@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="knockout-3.4.2.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <h2>Account Details</h2>
+    <br />
+    Id: <span data-bind="text:Id"></span><br />
+    Name: <span data-bind="text:Name"></span><br />
+    Balance: <span data-bind="text:Balance"></span>
+    <hr />
+    New Balance: <input type="text" data-bind="value:Balance"/>
+
+    <script>
+        var Account=function(id,name,balance)
+        {
+            this.Id = id;
+            this.Name = name;
+            this.Balance = balance;
+        }
+
+        var AccountViewModal=function(acc)
+        {
+            this.Id = acc.Id;
+            this.Name = acc.Name;
+            this.Balance = ko.observable(acc.Balance);
+        }
+
+        var acc = new Account("1", "A1", "100");
+        var accViewModel = new AccountViewModal(acc);
+
+        ko.applyBindings(accViewModel);
+    </script>
+</body>
+</html>
