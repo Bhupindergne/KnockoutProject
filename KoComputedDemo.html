@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="knockout-3.4.2.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('#btnBalance').click(function () {
+                alert(accViewModel.Balance())
+            });
+
+            $('#updateBalance').click(function () {
+                accViewModel.Balance(Number(accViewModel.Balance()) + Number($('#txtBalance').val()));
+            });
+
+            $('#btnCreateNewAccount').click(function () {
+                var acc = new Account($('#txtNewId').val(), $('#txtNewName').val(), $('#txtNewBalance').val());
+                accViewModel.Accounts.push(acc);
+                alert(accViewModel.Accounts().length);
+            });
+
+            $('#btnDeleteAccount').click(function () {
+                accViewModel.pop();
+            })
+
+            $('#ddlAccount').change(function () {
+                var selInd = $(this).val();
+                accViewModel.SelectedAccountIndex(--selInd);
+            })
+
+        });
+    </script>
+</head>
+<body>
+    <span>Accounts</span><select id="ddlAccount" data-bind="options:Accounts,optionsText:'Name', optionsValue:'Id'"></select>
+    <h2>Account Details</h2>
+    <h3>Total Balance : <span data-bind="text:TotalBalance"></span></h3>
+    <br />
+    Id: <span data-bind="text: Accounts()[SelectedAccountIndex()].Id"></span><br />
+    Name: <span data-bind="text:Accounts()[SelectedAccountIndex()].Name"></span><br />
+    Balance: <span data-bind="text:Accounts()[SelectedAccountIndex()].Balance"></span>
+    <br />
+    <input type="button" id="btnBalance" value="Get Balance"/>
+    <br />
+    <hr />
+   
+
+    Id: <input type="text" id="txtNewId"/><br />
+    Name: <input type="text" id="txtNewName" /><br />
+    Balance: <input type="text" id="txtNewBalance" /><br />
+    <input type="button" id="btnCreateNewAccount" value="Create"/>
+    <input type="button" id="btnDeleteAccount" value="Delete"/>
+    <script>
+        var Account=function(id,name,balance)
+        {
+            this.Id = id;
+            this.Name = name;
+            this.Balance = balance;
+        }
+
+        var AccountViewModal=function(acc)
+        {
+            var self = this;
+            this.Id = acc.Id;
+            this.Name = acc.Name;
+            this.Balance = ko.observable(acc.Balance);
+            var a1 = new Account(1, 'A1', 1000);
+            var a2 = new Account(2, 'A2', 2000);
+            var a3 = new Account(3, 'A3', 3000);
+            this.Accounts = ko.observableArray([a1, a2, a3]);
+            this.SelectedAccountIndex = ko.observable(0);
+            this.TotalBalance = ko.computed(function () {
+                var totalBalance = 0;
+                for (var i = 0; i < self.Accounts().length; i++) {
+                    totalBalance += Number(self.Accounts()[i].Balance);
+                }
+                return totalBalance
+            })
+        }
+
+        var acc = new Account("1", "A1", "100");
+        var accViewModel = new AccountViewModal(acc);
+
+        ko.applyBindings(accViewModel);
+    </script>
+</body>
+</html>
